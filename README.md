@@ -1,4 +1,4 @@
-# Variant's Private Messages
+# Variaantt's Private Messages
 
 A lightweight private messaging system for FiveM. Players send private messages to each other by server ID with `/pm`, and the receiver can answer the last person who wrote to them with `/r`. Messages appear as modern on-screen notifications with an icon, a sound and a progress bar.
 
@@ -28,11 +28,11 @@ No other resources or frameworks are required.
 3. Add the resource to your `server.cfg`:
 
    ```cfg
-   ensure variants_private_messages
+   ensure variaantt-pm
    ```
 
    Use the same name as the folder.
-4. Restart the server, or run `refresh` and `ensure variants_private_messages` from the console.
+4. Restart the server, or run `refresh` and `ensure variaantt-pm` from the console.
 
 ## Usage
 
@@ -93,7 +93,7 @@ To change colors, size or position of the notifications, edit the CSS file.
 ## Project structure
 
 ```
-variants_private_messages/
+variaantt-pm/
 ├── fxmanifest.lua
 ├── client.lua
 ├── server.lua
@@ -122,8 +122,13 @@ Every file in `html` (including images and audio) must be listed in the `files` 
 
 Made by **Variaantt**.
 
-The notification sound and the icons are not included under the license of this project. Replace them with your own files, or make sure you have the right to use them.
+### How this project was made
+
+- The Lua and JavaScript code was written entirely by hand.
+- **Claude** (Anthropic) was used as an assistant, to explain concepts and review the code, and it also helped with part of the CSS.
+- **ChatGPT** (OpenAI) generated the icons, defined the UI design and wrote the CSS.
+- The notification sound was taken from a free sound website.
 
 ## License
 
-Choose a license and add a `LICENSE` file (for example MIT). If you do not add one, nobody has the legal right to reuse your code by default.
+This project is licensed under the MIT License. See [LICENSE.md](LICENSE.md) for details.
