@@ -127,7 +127,7 @@ Made by **Variaantt**.
 - The Lua and JavaScript code was written entirely by hand.
 - **Claude** (Anthropic) was used as an assistant, to explain concepts and review the code, and it also helped with part of the CSS.
 - **ChatGPT** (OpenAI) generated the icons, defined the UI design and wrote the CSS.
-- The notification sound was taken from a free sound website.
+- The notification sound was taken from a free sound website (Mixkit Sound Effects Free License).
 
 ## License
 
