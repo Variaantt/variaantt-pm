@@ -1,6 +1,6 @@
 # Variaantt's Private Messages
 
-A lightweight private messaging system for FiveM. Players send private messages to each other by server ID with `/pm`, and the receiver can answer the last person who wrote to them with `/r`. Messages appear as modern on-screen notifications with an icon, a sound and a progress bar.
+A lightweight private messaging system for FiveM. Players send private messages to each other by server ID with `/pm`, and the receiver can answer the last person who wrote to them with `/r`. Messages appear as modern on-screen notifications with an icon, a sound and a progress bar, and they support bold and italic text.
 
 <!-- Add a screenshot or a short GIF here, for example: ![Preview](preview.png) -->
 
@@ -9,10 +9,12 @@ A lightweight private messaging system for FiveM. Players send private messages 
 - `/pm <id> <message>` sends a private message to the player with that server ID
 - `/r <message>` answers the last player who sent you a message
 - Notification UI (NUI) in the top-right corner, with a different icon and bar color for each type: sent confirmation, received message, answer and error
-- Display time that grows with the length of the message (minimum and maximum are configurable)
+- Display time that grows with the length of the message, so long messages stay on screen longer (minimum and maximum are configurable)
+- Text formatting: `**bold**` and `__italic__`
+- Every message is also printed to the console, so if you miss a notification you can read it again
 - Sound played when a message or an answer arrives
 - Input checks on the server: valid ID, connected player, non-empty message
-- Message text is inserted with `textContent`, so players cannot inject HTML into other players' screens
+- Text is never inserted as HTML (formatting is built with DOM elements and `textContent`), so players cannot inject HTML into other players' screens
 
 ## Requirements
 
@@ -50,6 +52,25 @@ Examples:
 
 You can see a player's ID in the scoreboard or in the server player list.
 
+## Text formatting
+
+| You write | You get |
+|---|---|
+| `**text**` | **text** (bold) |
+| `__text__` | *text* (italic) |
+
+Example:
+
+```
+/pm 12 Meet me **now** at the __garage__
+```
+
+Rules:
+
+- Both markers must be closed, otherwise the text is shown exactly as typed.
+- Bold and italic cannot be nested inside each other.
+- Anything else, including HTML tags, is shown as plain text.
+
 ## Important: there is no permission check
 
 By default **anyone** can use `/pm`. This resource does not include an admin check on purpose, so it can be adapted to any server setup.
@@ -64,8 +85,8 @@ If you want only admins to send messages, add a check at the very beginning of t
 
 1. The server registers the commands, validates the input and keeps a table with the last sender of each player (used by `/r`).
 2. The server sends the `sendMessage` event to the right client with a type and a text.
-3. The client receives the event and forwards it to the NUI page.
-4. The page builds the notification, plays the sound and removes it when its time is over.
+3. The client receives the event, prints the message to the console and forwards it to the NUI page.
+4. The page builds the notification, formats the text, plays the sound and removes it when its time is over. The display time depends on the length of the message.
 
 Notification types sent by the server:
 
@@ -78,7 +99,7 @@ Notification types sent by the server:
 
 ## Configuration
 
-The values are constants at the top of the script in the `html` folder:
+The values are constants at the top of the script in the `html` folder. The display time of a notification is calculated as `BASE + PER_CHAR * number of characters`, then limited between `MIN` and `MAX`.
 
 | Constant | Default | Meaning |
 |---|---|---|
@@ -86,7 +107,8 @@ The values are constants at the top of the script in the `html` folder:
 | `PER_CHAR` | `50` | Extra time (ms) for each character of the message |
 | `MIN` | `3000` | Minimum display time (ms) |
 | `MAX` | `12000` | Maximum display time (ms) |
-| `audio.volume` | `0.2` | Sound volume, from `0` to `1` |
+| `EXIT_TIME` | `350` | Duration of the exit animation (ms), it must match the one in the CSS |
+| `audio.volume` | `0.5` | Sound volume, from `0` to `1` |
 
 To change colors, size or position of the notifications, edit the CSS file.
 
@@ -102,9 +124,10 @@ variaantt-pm/
     ├── style.css
     ├── scripts.js
     ├── img/
-    │   ├── success.png
-    │   ├── msg.png
-    │   └── failed.png
+    │   ├── success.svg
+    │   ├── msg.svg
+    │   ├── answer.svg
+    │   └── failed.svg
     └── audio/
         └── notify.mp3
 ```
@@ -115,7 +138,7 @@ Every file in `html` (including images and audio) must be listed in the `files` 
 
 - Sending a message to yourself is allowed (useful for testing).
 - The ID is not checked to be an integer.
-- Text formatting (bold, italic, ...) is not supported.
+- The sender's name and ID are part of the same text as the message, so the formatting markers also work inside them.
 - The last sender is stored in memory, so the `/r` history is lost when the resource restarts.
 
 ## Credits
@@ -124,9 +147,9 @@ Made by **Variaantt**.
 
 ### How this project was made
 
-- The Lua and JavaScript code was written entirely by hand.
-- **Claude** (Anthropic) was used as an assistant, to explain concepts and review the code, and it also helped with part of the CSS.
-- **ChatGPT** (OpenAI) generated the icons, defined the UI design and wrote the CSS.
+- The Lua code was written entirely by hand.
+- The JavaScript is a mix of hand-written code and code written with the help of AI.
+- The UI design, the CSS file and the icons were written by **Claude** (Anthropic), which was also used as an assistant to explain concepts and review the code.
 - The notification sound was taken from a free sound website (Mixkit Sound Effects Free License).
 
 ## License

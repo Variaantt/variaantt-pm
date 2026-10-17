@@ -6,11 +6,29 @@ const EXIT_TIME = 350;
 const audio = new Audio("audio/notify.mp3");
 audio.volume = 0.5;
 
+function formatText(container, text) {
+    const parts = text.split(/(\*\*.+?\*\*|__.+?__)/g);
+
+    parts.forEach(function (part) {
+        if (part.length > 4 && part.startsWith("**") && part.endsWith("**")) {
+            const strong = document.createElement("strong");
+            strong.textContent = part.slice(2, -2);
+            container.appendChild(strong);
+        } else if (part.length > 4 && part.startsWith("__") && part.endsWith("__")) {
+            const em = document.createElement("em");
+            em.textContent = part.slice(2, -2);
+            container.appendChild(em);
+        } else {
+            container.appendChild(document.createTextNode(part));
+        }
+    });
+}
+
 const typeMessage = {
-    success: "img/success.png",
-    msg: "img/msg.png",
-    answer: "img/msg.png",
-    error: "img/failed.png"
+    success: "img/success.svg",
+    msg: "img/msg.svg",
+    answer: "img/answer.svg",
+    error: "img/failed.svg"
 }
 
 window.addEventListener("message", function(event) {
@@ -26,7 +44,7 @@ window.addEventListener("message", function(event) {
     $icon.classList.add("notify-icon");
     $image.src = typeMessage[event.data.type];
     $content.classList.add("notify-text");
-    $content.textContent = event.data.message;
+    formatText($content, event.data.message);
     
     switch (event.data.type) {
         case "success":

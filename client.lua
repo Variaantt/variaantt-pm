@@ -1,6 +1,9 @@
 RegisterNetEvent("sendMessage")
 AddEventHandler("sendMessage", function(typeMessage, message)
-    print(message)
+    if typeMessage == "msg" or typeMessage == "answer" then
+        print(message)
+    end
+    
     SendNUIMessage({
         type = typeMessage;
         message = message;

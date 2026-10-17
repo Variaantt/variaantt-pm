@@ -13,6 +13,6 @@ files {
     'html/ui.html',
     'html/style.css',
     'html/script.js',
-    'html/img/*.png',
+    'html/img/*.svg',
     'html/audio/*.mp3'
 }
