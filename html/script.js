@@ -70,7 +70,7 @@ window.addEventListener("message", function(event) {
     $msg.appendChild($bar);
     document.getElementById("notify-container").appendChild($msg);
     
-    if(event.data.type === "msg") {
+    if(event.data.type === "msg" || event.data.type === "answer") {
         audio.play();
     }
 

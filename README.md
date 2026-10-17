@@ -7,26 +7,26 @@ A lightweight private messaging system for FiveM. Players send private messages 
 ## Features
 
 - `/pm <id> <message>` sends a private message to the player with that server ID
-- `/r <message>` answers the last player who sent you a message
+- `/r <message>` answers the last player who sent you a message or an answer, so the conversation can continue in both directions
 - Notification UI (NUI) in the top-right corner, with a different icon and bar color for each type: sent confirmation, received message, answer and error
 - Display time that grows with the length of the message, so long messages stay on screen longer (minimum and maximum are configurable)
 - Text formatting: `**bold**` and `__italic__`
-- Every message is also printed to the console, so if you miss a notification you can read it again
+- Received messages and answers are also printed to the client console (F8), so if you miss a notification you can read it again
 - Sound played when a message or an answer arrives
 - Input checks on the server: valid ID, connected player, non-empty message
 - Text is never inserted as HTML (formatting is built with DOM elements and `textContent`), so players cannot inject HTML into other players' screens
 
 ## Requirements
 
-- A FiveM server (any recent artifact)
+- A FiveM server and a recent FiveM client (the notifications use modern CSS)
 - Lua 5.4 (enabled in the manifest with `lua54 'yes'`)
 
 No other resources or frameworks are required.
 
 ## Installation
 
-1. Download or clone this repository.
-2. Put the folder inside your server's `resources` directory.
+1. Download the latest version from the [Releases](../../releases) page, or clone this repository.
+2. Put the folder inside your server's `resources` directory and make sure it is named `variaantt-pm`. GitHub zips usually add the version number to the folder name, so rename it if needed.
 3. Add the resource to your `server.cfg`:
 
    ```cfg
@@ -41,7 +41,7 @@ No other resources or frameworks are required.
 | Command | Who can use it | Description |
 |---|---|---|
 | `/pm <id> <message>` | Everyone (see the warning below) | Sends a private message to the player with the given server ID |
-| `/r <message>` | Everyone | Answers the last player who sent you a message |
+| `/r <message>` | Everyone | Answers the last player who sent you a message or an answer |
 
 Examples:
 
@@ -80,13 +80,13 @@ If you want only admins to send messages, add a check at the very beginning of t
 ## How it works
 
 ```
-/pm (server.lua)  ->  TriggerClientEvent  ->  client.lua  ->  SendNUIMessage  ->  scripts.js (notification)
+/pm (server.lua)  ->  TriggerClientEvent  ->  client.lua  ->  SendNUIMessage  ->  script.js (notification)
 ```
 
-1. The server registers the commands, validates the input and keeps a table with the last sender of each player (used by `/r`).
+1. The server registers the commands, validates the input and keeps a table with the last person each player can answer with `/r`. The table is updated every time a message or an answer is sent.
 2. The server sends the `sendMessage` event to the right client with a type and a text.
-3. The client receives the event, prints the message to the console and forwards it to the NUI page.
-4. The page builds the notification, formats the text, plays the sound and removes it when its time is over. The display time depends on the length of the message.
+3. The client receives the event, prints received messages and answers to its console (F8) and forwards the message to the NUI page.
+4. The page builds the notification, formats the text, plays the sound for received messages and answers and removes the notification when its time is over. The display time depends on the length of the message.
 
 Notification types sent by the server:
 
@@ -99,7 +99,7 @@ Notification types sent by the server:
 
 ## Configuration
 
-The values are constants at the top of the script in the `html` folder. The display time of a notification is calculated as `BASE + PER_CHAR * number of characters`, then limited between `MIN` and `MAX`.
+The values are constants at the top of `html/script.js`. The display time of a notification is calculated as `BASE + PER_CHAR * number of characters`, then limited between `MIN` and `MAX`.
 
 | Constant | Default | Meaning |
 |---|---|---|
@@ -119,10 +119,14 @@ variaantt-pm/
 ├── fxmanifest.lua
 ├── client.lua
 ├── server.lua
+├── LICENSE.md
+├── README.md
+├── preview/
+│   └── preview.png
 └── html/
-    ├── index.html
+    ├── ui.html
     ├── style.css
-    ├── scripts.js
+    ├── script.js
     ├── img/
     │   ├── success.svg
     │   ├── msg.svg
@@ -151,6 +155,7 @@ Made by **Variaantt**.
 - The JavaScript is a mix of hand-written code and code written with the help of AI.
 - The UI design, the CSS file and the icons were written by **Claude** (Anthropic), which was also used as an assistant to explain concepts and review the code.
 - The notification sound was taken from a free sound website (Mixkit Sound Effects Free License).
+- The preview image is a screenshot taken in game, enhanced with **ChatGPT** (OpenAI) because the cropped original was pixelated.
 
 ## License
 

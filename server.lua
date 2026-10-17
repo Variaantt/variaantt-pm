@@ -28,14 +28,15 @@ end, false)
 
 RegisterCommand("r", function(source, args, rawCommand)
     if lastMessengers[source] ~= nil then
-        local lastMessenger = lastMessengers[source]
-        local addressee = GetPlayerName(lastMessenger)
+        local lastMessengerID = lastMessengers[source]
+        local addressee = GetPlayerName(lastMessengerID)
         if addressee ~= nil then
             local sender = GetPlayerName(source)
             local message = table.concat(args, " ", 1)
             if message ~= "" then
-                TriggerClientEvent("sendMessage", lastMessenger, "answer", "Answer from "..sender.." | ID ("..source..") : "..message)
-                TriggerClientEvent("sendMessage", source, "success", "Answer to "..addressee.." ID ("..lastMessenger..") sent")
+                TriggerClientEvent("sendMessage", lastMessengerID, "answer", "Answer from "..sender.." | ID ("..source..") : "..message)
+                TriggerClientEvent("sendMessage", source, "success", "Answer to "..addressee.." ID ("..lastMessengerID..") sent")
+                lastMessengers[lastMessengerID] = source
             else
                 TriggerClientEvent("sendMessage", source, "error", "Error: The message cannot be empty")
             end

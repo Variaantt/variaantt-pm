@@ -4,6 +4,8 @@ lua54 'yes'
 
 author 'Variaantt'
 description 'Variaantts Private Messages'
+version '1.0.0'
+repository 'https://github.com/Variaantt/variaantt-pm'
 
 client_script 'client.lua'
 server_script 'server.lua'
