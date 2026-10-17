@@ -2,7 +2,7 @@
 
 A lightweight private messaging system for FiveM. Players send private messages to each other by server ID with `/pm`, and the receiver can answer the last person who wrote to them with `/r`. Messages appear as modern on-screen notifications with an icon, a sound and a progress bar, and they support bold and italic text.
 
-<!-- Add a screenshot or a short GIF here, for example: ![Preview](preview.png) -->
+![Preview](preview/preview.png)>
 
 ## Features
 
